@@ -4,5 +4,5 @@
 |------------|-------------|-------------|--------|--------|
 |  random forest   |   horse_id, jockey_id, 単勝, 人気          |    着順         |    0.11    |        |
 |       random forest      |    jockey_id, 単勝, 人気         |        着順      |    0.11    |        |
-|            |             |             |        |        |
+|    random forest        |     jockey_id, 単勝, 人気        |      一着かどうか       |   0.91     |        |
 

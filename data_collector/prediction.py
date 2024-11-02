@@ -44,15 +44,22 @@ df['タイム_秒'] = df['分'] * 60 + df['秒']
 # 5. 不要な列を削除
 df = df.drop(['タイム', '分', '秒'], axis=1)
 
+# 着順の確認
+print("着順の unique な値:", df['着順'].unique())
+
 # 着順の数値変換可能なデータのみを抽出
 df['着順'] = pd.to_numeric(df['着順'], errors='coerce')
 df = df.dropna(subset=['着順'])  # 着順が数値変換できなかったデータを削除
+
+# 着順を二値に変換（1着=1, その他=0）
+df['is_win'] = (df['着順'] == 1).astype(int)
 
 features = ['jockey_id', '単勝', '人気']
 
 # 説明変数と目的変数の分離
 X = df[features]
-y = df['着順'].astype(int)
+y = df['is_win']
+# y = df['着順'].astype(int)
 
 # データの分割
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
