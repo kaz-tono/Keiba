@@ -1,5 +1,5 @@
 # model : random forest
-# used data : horse_id, jockey_id, 単勝, 人気
+# used data : jockey_id, 単勝, 人気
 # predict: 着順
 
 import glob
@@ -48,7 +48,7 @@ df = df.drop(['タイム', '分', '秒'], axis=1)
 df['着順'] = pd.to_numeric(df['着順'], errors='coerce')
 df = df.dropna(subset=['着順'])  # 着順が数値変換できなかったデータを削除
 
-features = ['horse_id', 'jockey_id', '単勝', '人気']
+features = ['jockey_id', '単勝', '人気']
 
 # 説明変数と目的変数の分離
 X = df[features]
@@ -65,4 +65,5 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 print(f'正解率: {accuracy}')
-#結果: 正解率: 0.11
+
+#結果はresult_log.mdに記録
