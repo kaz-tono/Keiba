@@ -9,7 +9,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, confusion_matrix
 
 # データの読み込み
 # pickleファイルが存在するディレクトリのパス
@@ -71,6 +71,43 @@ model.fit(X_train, y_train)
 # 予測と評価
 y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
-print(f'正解率: {accuracy}')
+precision = precision_score(y_test, y_pred)
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# 結果の表示
+print(f'全体の正解率: {accuracy:.3f}')
+print(f'1着的中率: {precision:.3f}')
+print('\n混同行列:')
+print(conf_matrix)
+
+# 予測結果をデータフレームに追加
+results_df = X_test.copy()
+results_df['実際の着順'] = y_test
+results_df['予測'] = y_pred
+
+# 日時をファイル名に追加
+from datetime import datetime
+timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+filename = f'prediction_results_{timestamp}.csv'
+
+# 結果を保存
+results_df.to_csv(f'results/{filename}', index=False)
+
+# ログファイルに記録
+with open('results/result_log.md', 'a') as f:
+    f.write(f'\n## timestamp {timestamp}\n')
+    f.write(f'- accuracy: {accuracy:.3f}\n')
+    f.write(f'- precision: {precision:.3f}\n')
+    f.write(f'- filename: {filename}\n')
+
+        # 混同行列の追加
+    f.write('\n### confusion matrix\n')
+    f.write('```\n')
+    f.write(f'{conf_matrix}\n')
+    f.write('```\n')
+    
+    # 混同行列の説明
+    f.write('\n- row : Actual (0: others, 1: 1st position)\n')
+    f.write('- column : Prediction (0: others, 1: 1st position)\n')
 
 #結果はresult_log.mdに記録
